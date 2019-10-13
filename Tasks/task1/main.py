@@ -13,4 +13,3 @@ x_test_dir = 'X_test.csv'
 x_train = pd.read_csv(x_train_dir)
 y_train = pd.read_csv(y_train_dir)
 x_test = pd.read_csv(x_test_dir)
-
