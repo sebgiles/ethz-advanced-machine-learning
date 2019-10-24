@@ -47,4 +47,5 @@ x_test_norm = pd.DataFrame(min_max_sc.transform(x_test))
 outlier_detection = DBSCAN(eps=6.35, metric="euclidean", min_samples=20, n_jobs=-1)
 clusters = outlier_detection.fit_predict(x_train_norm)
 indices = np.where(clusters == -1)[0]
-
+x_train.drop(x_train.index[indices], inplace=True)
+y_train.drop(y_train.index[indices], inplace=True)
