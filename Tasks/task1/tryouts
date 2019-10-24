@@ -38,13 +38,44 @@ imp_median = SimpleImputer(missing_values=np.nan, strategy='median')
 x_train = pd.DataFrame(imp_median.fit_transform(x_train))
 x_test = pd.DataFrame(imp_median.fit_transform(x_test))
 
+# plot scatter plots to understand distribution of outliers
+# x_idx = [10, 20, 30, 40]
+# for idx in x_idx:
+#     plt.scatter(x_train[:, idx], x_train[:, idx+5])
+#     plt.show()
+
 # normalize with min-max the training set
 min_max_sc = preprocessing.MinMaxScaler()
 x_train_norm = pd.DataFrame(min_max_sc.fit_transform(x_train))
 x_test_norm = pd.DataFrame(min_max_sc.transform(x_test))
+df_tot_norm = pd.concat([x_train_norm, x_test_norm])
 
 # do outlier detection using DBSCAN
-outlier_detection = DBSCAN(eps=6.35, metric="euclidean", min_samples=20, n_jobs=-1)
-clusters = outlier_detection.fit_predict(x_train_norm)
-indices = np.where(clusters == -1)[0]
+eps_arr_man = [133.8, 133.9, 134.0, 134.1, 134.2, 134.3, 134.4, 134.5, 134.6]
+for i in eps_arr_man:
+    print('manhattan EPS: {}'.format(i))
+
+    outlier_detection = DBSCAN(eps=i, metric="manhattan", min_samples=20, n_jobs=-1)
+    clusters = outlier_detection.fit_predict(df_tot_norm)
+
+    n_outliers_train = -np.sum(clusters[:n_samples_train])
+    print('Train: {}'.format(n_outliers_train))
+
+    n_outliers_test = -np.sum(clusters[n_samples_train:])
+    print('Test: {}\n'.format(n_outliers_test))
+
+eps_arr_euc = [6.3, 6.31, 6.32, 6.33, 6.34, 6.35]
+for j in eps_arr_euc:
+    print('euclidean EPS: {}'.format(j))
+
+    outlier_detection = DBSCAN(eps=j, metric="euclidean", min_samples=20, n_jobs=-1)
+    clusters = outlier_detection.fit_predict(df_tot_norm)
+
+    n_outliers_train = -np.sum(clusters[:n_samples_train])
+    print('Train: {}'.format(n_outliers_train))
+
+    n_outliers_test = -np.sum(clusters[n_samples_train:])
+    print('Test: {}\n'.format(n_outliers_test))
+
+
 
