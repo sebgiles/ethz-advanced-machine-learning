@@ -73,16 +73,15 @@ x_train_norm = x_train_norm[:, index]
 x_test_norm = x_test_norm[:, index]
 
 # use different regressors
-grad_1 = GradientBoostingRegressor(n_estimators=200, max_depth=4, subsample=0.8, random_state=666, max_features="auto")
-grad_2 = GradientBoostingRegressor(n_estimators=200, max_depth=4, subsample=0.8, random_state=667, max_features="auto")
-# grad_3 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=668, max_features="auto")
-# grad_4 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=669, max_features="auto")
-# grad_5 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=670, max_features="auto")
+grad_1 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=666, max_features="auto")
+grad_2 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=667, max_features="auto")
+grad_3 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=668, max_features="auto")
+grad_4 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=669, max_features="auto")
+grad_5 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=670, max_features="auto")
 
 knn = KNeighborsRegressor(n_neighbors=9, weights="distance", p=1)
 
-# regs = [grad_1, grad_2, grad_3, grad_4, grad_5, knn]
-regs = [grad_1, grad_2, knn]
+regs = [grad_1, grad_2, grad_3, grad_4, grad_5, knn]
 fits = np.zeros((x_train_norm.shape[0], len(regs)))
 preds = np.zeros((x_test_norm.shape[0], len(regs)))
 for i, reg in enumerate(regs):
@@ -91,8 +90,7 @@ for i, reg in enumerate(regs):
     preds[:, i] = reg.predict(x_test_norm)
 
 
-# mask = [.2, .2, .2, .2, .2, .5]
-mask = [.2, .2, .5]
+mask = [.2, .2, .2, .2, .2, .5]
 mask = mask / np.sum(mask)
 train_pred = np.sum(fits*mask, axis=1)
 test_pred = np.sum(preds*mask, axis=1)
