@@ -73,11 +73,11 @@ x_train_norm = x_train_norm[:, index]
 x_test_norm = x_test_norm[:, index]
 
 # use different regressors
-grad_1 = GradientBoostingRegressor(n_estimators=200, max_depth=4, subsample=0.8, random_state=666, max_features="auto")
-grad_2 = GradientBoostingRegressor(n_estimators=250, max_depth=4, subsample=0.8, random_state=667, max_features="auto")
-grad_3 = GradientBoostingRegressor(n_estimators=300, max_depth=4, subsample=0.8, random_state=668, max_features="auto")
-grad_4 = GradientBoostingRegressor(n_estimators=350, max_depth=4, subsample=0.8, random_state=669, max_features="auto")
-grad_5 = GradientBoostingRegressor(n_estimators=400, max_depth=4, subsample=0.8, random_state=670, max_features="auto")
+grad_1 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=666, max_features="auto")
+grad_2 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=667, max_features="auto")
+grad_3 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=668, max_features="auto")
+grad_4 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=669, max_features="auto")
+grad_5 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=670, max_features="auto")
 
 knn = KNeighborsRegressor(n_neighbors=9, weights="distance", p=1)
 
