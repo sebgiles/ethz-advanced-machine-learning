@@ -95,11 +95,11 @@ mask = mask / np.sum(mask)
 train_pred = np.sum(fits*mask, axis=1)
 test_pred = np.sum(preds*mask, axis=1)
 
-print(r2_score(y_train, np.ravel(train_pred)))                      # training accuracy
+print(r2_score(y_train, np.ravel(train_pred)))
 
 test_pred = np.reshape(test_pred, (test_pred.shape[0], 1))
 test_pred = np.round(test_pred)
 labels_out = np.reshape(labels_out, (labels_out.shape[0], 1))
 
-out = np.concatenate((labels_out, test_pred), axis=1)
-np.savetxt("out.csv", out, delimiter=",", header="id,y")            # NEED TO MANUALLY REMOVE # FROM HEADER
+output = np.concatenate((labels_out, test_pred), axis=1)
+np.savetxt(y_test_dir, output, delimiter=",", header="id,y", comments='')
