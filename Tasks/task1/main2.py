@@ -30,15 +30,15 @@ labels_out = np.genfromtxt('X_test.csv', delimiter=",")[1:, 0]
 
 n_samples_train = len(x_train.index)
 
-# drop the 10% columns with most missing values
-nan_train = x_train.isna().sum()
-nan_test = x_test.isna().sum()
-nan_tot = nan_train + nan_test
-nan_tot.sort_values(ascending=False, inplace=True)
-len_tot = len(nan_tot)
-idx_worst_nan_tot = nan_tot[0:int(np.ceil(0.1*len_tot))].index
-x_test.drop(columns=idx_worst_nan_tot, inplace=True)
-x_train.drop(columns=idx_worst_nan_tot, inplace=True)
+# # drop the 10% columns with most missing values
+# nan_train = x_train.isna().sum()
+# nan_test = x_test.isna().sum()
+# nan_tot = nan_train + nan_test
+# nan_tot.sort_values(ascending=False, inplace=True)
+# len_tot = len(nan_tot)
+# idx_worst_nan_tot = nan_tot[0:int(np.ceil(0.1*len_tot))].index
+# x_test.drop(columns=idx_worst_nan_tot, inplace=True)
+# x_train.drop(columns=idx_worst_nan_tot, inplace=True)
 
 # impute the data using median imputation column-wise (simple imputer)
 imp_median = SimpleImputer(missing_values=np.nan, strategy='median')
@@ -75,13 +75,13 @@ indx = rfe.get_support(indices=True)
 X_in = X_in[:, indx]
 X_out = X_out[:, indx]
 
-rfe = RFE(estimator, n_features_to_select=100, step=3, verbose=1)
+rfe = RFE(estimator, n_features_to_select=150, step=3, verbose=1)
 rfe.fit_transform(X_in, y_in)
 indx = rfe.get_support(indices=True)
 X_in = X_in[:, indx]
 X_out = X_out[:, indx]
 
-rfe = RFE(estimator, n_features_to_select=50, step=1, verbose=1)
+rfe = RFE(estimator, n_features_to_select=100, step=1, verbose=1)
 rfe.fit_transform(X_in, y_in)
 indx = rfe.get_support(indices=True)
 X_in = X_in[:, indx]
