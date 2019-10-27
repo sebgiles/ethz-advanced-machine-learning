@@ -30,16 +30,6 @@ labels_out = np.genfromtxt('X_test.csv', delimiter=",")[1:, 0]
 
 n_samples_train = len(x_train.index)
 
-# drop the 10% columns with most missing values
-nan_train = x_train.isna().sum()
-nan_test = x_test.isna().sum()
-nan_tot = nan_train + nan_test
-nan_tot.sort_values(ascending=False, inplace=True)
-len_tot = len(nan_tot)
-idx_worst_nan_tot = nan_tot[0:int(np.ceil(0.1*len_tot))].index
-x_test.drop(columns=idx_worst_nan_tot, inplace=True)
-x_train.drop(columns=idx_worst_nan_tot, inplace=True)
-
 # impute the data using median imputation column-wise (simple imputer)
 imp_median = SimpleImputer(missing_values=np.nan, strategy='median')
 x_train = pd.DataFrame(imp_median.fit_transform(x_train))
@@ -68,43 +58,43 @@ X_out = x_test_norm
 y_in = y_train
 
 # feature selection
-estimator = GradientBoostingRegressor(loss="ls", n_estimators=300, max_depth=4, subsample=0.7, random_state=666, max_features="auto")
-rfe = RFE(estimator, n_features_to_select=200, step=20, verbose=1)
+estimator = GradientBoostingRegressor(loss="ls", n_estimators=1000, max_depth=4, subsample=0.7, random_state=666, max_features="auto")
+rfe = RFE(estimator, n_features_to_select=300, step=1, verbose=1)
 rfe.fit_transform(X_in, y_in)
 indx = rfe.get_support(indices=True)
 X_in = X_in[:, indx]
 X_out = X_out[:, indx]
 
-rfe = RFE(estimator, n_features_to_select=100, step=3, verbose=1)
+rfe = RFE(estimator, n_features_to_select=200, step=1, verbose=1)
 rfe.fit_transform(X_in, y_in)
 indx = rfe.get_support(indices=True)
 X_in = X_in[:, indx]
 X_out = X_out[:, indx]
 
-rfe = RFE(estimator, n_features_to_select=50, step=1, verbose=1)
+rfe = RFE(estimator, n_features_to_select=100, step=1, verbose=1)
 rfe.fit_transform(X_in, y_in)
 indx = rfe.get_support(indices=True)
 X_in = X_in[:, indx]
 X_out = X_out[:, indx]
 
 # use different regressors
-grad_1 = GradientBoostingRegressor(n_estimators=300, max_depth=4, subsample=0.8, random_state=666, max_features="auto")
-grad_2 = GradientBoostingRegressor(n_estimators=300, max_depth=4, subsample=0.8, random_state=667, max_features="auto")
-grad_3 = GradientBoostingRegressor(n_estimators=300, max_depth=4, subsample=0.8, random_state=668, max_features="auto")
-grad_4 = GradientBoostingRegressor(n_estimators=300, max_depth=4, subsample=0.8, random_state=669, max_features="auto")
-grad_5 = GradientBoostingRegressor(n_estimators=300, max_depth=4, subsample=0.8, random_state=670, max_features="auto")
+grad_1 = GradientBoostingRegressor(n_estimators=1000, max_depth=4, subsample=0.8, random_state=666, max_features="auto")
+grad_2 = GradientBoostingRegressor(n_estimators=1000, max_depth=4, subsample=0.8, random_state=667, max_features="auto")
+grad_3 = GradientBoostingRegressor(n_estimators=1000, max_depth=4, subsample=0.8, random_state=668, max_features="auto")
+grad_4 = GradientBoostingRegressor(n_estimators=1000, max_depth=4, subsample=0.8, random_state=669, max_features="auto")
+grad_5 = GradientBoostingRegressor(n_estimators=1000, max_depth=4, subsample=0.8, random_state=670, max_features="auto")
 
-grad_6 = GradientBoostingRegressor(loss="ls", n_estimators=300, max_depth=4, subsample=0.7, random_state=671, max_features="auto")
-grad_7 = GradientBoostingRegressor(loss="ls", n_estimators=300, max_depth=4, subsample=0.7, random_state=672, max_features="auto")
-grad_8 = GradientBoostingRegressor(loss="ls", n_estimators=300, max_depth=4, subsample=0.7, random_state=673, max_features="auto")
-grad_9 = GradientBoostingRegressor(loss="ls", n_estimators=300, max_depth=4, subsample=0.7, random_state=674, max_features="auto")
-grad_10 = GradientBoostingRegressor(loss="ls", n_estimators=300, max_depth=4, subsample=0.7, random_state=675, max_features="auto")
+grad_6 = GradientBoostingRegressor(loss="ls", n_estimators=1000, max_depth=4, subsample=0.7, random_state=671, max_features="auto")
+grad_7 = GradientBoostingRegressor(loss="ls", n_estimators=1000, max_depth=4, subsample=0.7, random_state=672, max_features="auto")
+grad_8 = GradientBoostingRegressor(loss="ls", n_estimators=1000, max_depth=4, subsample=0.7, random_state=673, max_features="auto")
+grad_9 = GradientBoostingRegressor(loss="ls", n_estimators=1000, max_depth=4, subsample=0.7, random_state=674, max_features="auto")
+grad_10 = GradientBoostingRegressor(loss="ls", n_estimators=1000, max_depth=4, subsample=0.7, random_state=675, max_features="auto")
 
-grad_11 = GradientBoostingRegressor(loss="huber", n_estimators=300, max_depth=4, subsample=0.7, random_state=676, max_features="auto")
-grad_12 = GradientBoostingRegressor(loss="huber", n_estimators=300, max_depth=4, subsample=0.7, random_state=677, max_features="auto")
-grad_13 = GradientBoostingRegressor(loss="huber", n_estimators=300, max_depth=4, subsample=0.7, random_state=678, max_features="auto")
-grad_14 = GradientBoostingRegressor(loss="huber", n_estimators=300, max_depth=4, subsample=0.7, random_state=679, max_features="auto")
-grad_15 = GradientBoostingRegressor(loss="huber", n_estimators=300, max_depth=4, subsample=0.7, random_state=680, max_features="auto")
+grad_11 = GradientBoostingRegressor(loss="huber", n_estimators=1000, max_depth=4, subsample=0.7, random_state=676, max_features="auto")
+grad_12 = GradientBoostingRegressor(loss="huber", n_estimators=1000, max_depth=4, subsample=0.7, random_state=677, max_features="auto")
+grad_13 = GradientBoostingRegressor(loss="huber", n_estimators=1000, max_depth=4, subsample=0.7, random_state=678, max_features="auto")
+grad_14 = GradientBoostingRegressor(loss="huber", n_estimators=1000, max_depth=4, subsample=0.7, random_state=679, max_features="auto")
+grad_15 = GradientBoostingRegressor(loss="huber", n_estimators=1000, max_depth=4, subsample=0.7, random_state=680, max_features="auto")
 
 
 regs = [grad_1, grad_2, grad_3, grad_4, grad_5, grad_6, grad_7, grad_8, grad_9, grad_10, grad_11, grad_12,
