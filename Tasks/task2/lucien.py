@@ -10,6 +10,7 @@ from collections import Counter
 from sklearn.metrics import r2_score, balanced_accuracy_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import SVMSMOTE
 
 """
 1. import data, normalise
@@ -35,6 +36,10 @@ sts = StandardScaler()
 X_in = sts.fit_transform(X_in)
 X_out = sts.fit_transform(X_out)
 
+sm = SVMSMOTE(random_state=42)
+X_in, y_in_hot = sm.fit_resample(X_in, y_in_hot)
+
+
 ######################################################################################################################
 ### FFNNs
 
@@ -53,8 +58,7 @@ for rep in range(5):
 
     model0.compile(loss='categorical_crossentropy', optimizer="adam", metrics=['accuracy'])
 
-    model0.fit(X_in, y_in_hot, epochs=100, batch_size=128, callbacks=[cb], validation_split=0.3, verbose=0,
-              class_weight={0:1/.125, 1:1/.75, 2:1/.125}) # CAN DIRECTLY INCLUDE CLASS_WEIGHT
+    model0.fit(X_in, y_in_hot, epochs=100, batch_size=128, callbacks=[cb], validation_split=0.3, verbose=0)
 
     model_probs = model_probs+model0.predict_proba(X_out)
 
@@ -70,8 +74,7 @@ for rep in range(5):
 
     model1.compile(loss='categorical_crossentropy', optimizer="adam", metrics=['accuracy'])
 
-    model1.fit(X_in, y_in_hot, epochs=100, batch_size=128, callbacks=[cb], validation_split=0.3, verbose=0,
-              class_weight={0:1/.125, 1:1/.75, 2:1/.125}) # CAN DIRECTLY INCLUDE CLASS_WEIGHT
+    model1.fit(X_in, y_in_hot, epochs=100, batch_size=128, callbacks=[cb], validation_split=0.3, verbose=0)
 
     model_probs = model_probs+model1.predict_proba(X_out)
 
@@ -89,13 +92,12 @@ for rep in range(5):
 
     model2.compile(loss='categorical_crossentropy', optimizer="adam", metrics=['accuracy'])
 
-    model2.fit(X_in, y_in_hot, epochs=100, batch_size=128, callbacks=[cb], validation_split=0.3, verbose=0,
-              class_weight={0:1/.125, 1:1/.75, 2:1/.125}) # CAN DIRECTLY INCLUDE CLASS_WEIGHT
+    model2.fit(X_in, y_in_hot, epochs=100, batch_size=128, callbacks=[cb], validation_split=0.3, verbose=0)
 
     model_probs = model_probs+model2.predict_proba(X_out)
 
 y_out[1:,1] = np.argmax(model_probs, axis=1)
-np.savetxt("y_out.csv", y_out, delimiter=",",header="id,y",  comments='')
+np.savetxt("y_out.csv", y_out, delimiter=",", header="id,y",  comments='')
 
 
 
