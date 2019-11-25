@@ -1,0 +1,102 @@
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.metrics import r2_score
+from sklearn.impute import SimpleImputer
+
+"""
+0. median imputation
+1. normalise
+# OUTLIER DETECTION?
+2. feature selection using rfe to 250 ( -> IMPROVE!!!)
+3. grad, knn regressors -> bagging -> average (1, 0.5)
+4. => final prediction
+
+"""
+
+### 0. import -> impute
+X_in = np.genfromtxt ('X_train.csv', delimiter=",")[1:,1:]
+y_in = np.genfromtxt ('y_train.csv', delimiter=",")[1:,1:]
+X_out = np.genfromtxt ('X_test.csv', delimiter=",")[1:,1:] #also contains NAs
+print(X_in.shape)
+print(X_out.shape)
+labels_out = np.genfromtxt ('X_test.csv', delimiter=",")[1:,0]
+X_tot = np.concatenate((X_in, X_out), axis=0)
+print(X_tot.shape)
+
+median_imputer = SimpleImputer(missing_values=np.nan, strategy='median')
+X_tot = median_imputer.fit_transform(X_tot)
+
+
+### 1. normalise
+scaler = StandardScaler()
+X_tot = scaler.fit_transform(X_tot)
+X_in = X_tot[:X_in.shape[0],:]
+X_out = X_tot[X_in.shape[0]:,:]
+
+### 2. feature selection
+estimator = GradientBoostingRegressor(loss="ls", n_estimators=500, max_depth=4, subsample=0.7, random_state=666, max_features="auto")
+rfe = RFE(estimator, n_features_to_select=300, step=20, verbose=1)
+rfe.fit_transform(X_in, y_in)
+indx = rfe.get_support(indices=True)
+X_in = X_in[:,indx]
+X_out = X_out[:,indx]
+
+rfe = RFE(estimator, n_features_to_select=200, step=3, verbose=1)
+rfe.fit_transform(X_in, y_in)
+indx = rfe.get_support(indices=True)
+X_in = X_in[:,indx]
+X_out = X_out[:,indx]
+
+rfe = RFE(estimator, n_features_to_select=150, step=1, verbose=1)
+rfe.fit_transform(X_in, y_in)
+indx = rfe.get_support(indices=True)
+X_in = X_in[:,indx]
+X_out = X_out[:,indx]
+
+
+
+### 3. use different regressors
+grad_1 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=666, max_features="auto")
+grad_2 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=667, max_features="auto")
+grad_3 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=668, max_features="auto")
+grad_4 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=669, max_features="auto")
+grad_5 = GradientBoostingRegressor(n_estimators=500, max_depth=4, subsample=0.8, random_state=670, max_features="auto")
+
+grad_6 = GradientBoostingRegressor(loss="ls", n_estimators=500, max_depth=4, subsample=0.7, random_state=671, max_features="auto")
+grad_7 = GradientBoostingRegressor(loss="ls", n_estimators=500, max_depth=4, subsample=0.7, random_state=672, max_features="auto")
+grad_8 = GradientBoostingRegressor(loss="ls", n_estimators=500, max_depth=4, subsample=0.7, random_state=673, max_features="auto")
+grad_9 = GradientBoostingRegressor(loss="ls", n_estimators=500, max_depth=4, subsample=0.7, random_state=674, max_features="auto")
+grad_10 = GradientBoostingRegressor(loss="ls", n_estimators=500, max_depth=4, subsample=0.7, random_state=675, max_features="auto")
+
+grad_11 = GradientBoostingRegressor(loss="huber", n_estimators=500, max_depth=4, subsample=0.7, random_state=676, max_features="auto")
+grad_12 = GradientBoostingRegressor(loss="huber", n_estimators=500, max_depth=4, subsample=0.7, random_state=677, max_features="auto")
+grad_13 = GradientBoostingRegressor(loss="huber", n_estimators=500, max_depth=4, subsample=0.7, random_state=678, max_features="auto")
+grad_14 = GradientBoostingRegressor(loss="huber", n_estimators=500, max_depth=4, subsample=0.7, random_state=679, max_features="auto")
+grad_15 = GradientBoostingRegressor(loss="huber", n_estimators=500, max_depth=4, subsample=0.7, random_state=680, max_features="auto")
+
+
+regs = [grad_1, grad_2, grad_3, grad_4, grad_5, grad_6, grad_7, grad_8, grad_9, grad_10,
+        grad_11, grad_12, grad_13, grad_14, grad_15]
+fits= np.zeros((X_in.shape[0], len(regs)))
+preds = np.zeros((X_out.shape[0], len(regs)))
+for i, reg in enumerate(regs):
+    reg.fit(X_in, np.ravel(y_in))
+    fits[:, i] = reg.predict(X_in)
+    preds[:, i] = reg.predict(X_out)
+
+
+
+train_pred = np.mean(fits, axis=1)
+test_pred = np.mean(preds, axis=1)
+
+print(r2_score(y_in, np.ravel(train_pred))) # training accuracy
+
+test_pred = np.reshape(test_pred, (test_pred.shape[0],1))
+labels_out = np.reshape(labels_out, (labels_out.shape[0],1))
+
+out = np.concatenate((labels_out, test_pred), axis=1)
+np.savetxt("out.csv", out, delimiter=",", header="id,y", comments='')
