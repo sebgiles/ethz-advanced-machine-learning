@@ -1,4 +1,4 @@
-
+*.pyc
 *.ipynb_checkpoints
 task3/X_test.csv
 task3/X_train.csv
