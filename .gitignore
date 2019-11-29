@@ -4,3 +4,7 @@
 *.ipynb_checkpoints
 Tasks/task3/X_test.csv
 Tasks/task3/X_train.csv
+Tasks/task3/dump/
+Tasks/task3/task3-matlab/
+Tasks/.DS_Store
+Tasks/task1/.DS_Store
