@@ -1,10 +1,12 @@
 
+*.ipynb_checkpoints
+task3/X_test.csv
+task3/X_train.csv
+task3/dump/
+task3/task3-matlab/
 *.DS_Store
 .DS_Store
-*.ipynb_checkpoints
-Tasks/task3/X_test.csv
-Tasks/task3/X_train.csv
-Tasks/task3/dump/
-Tasks/task3/task3-matlab/
-Tasks/.DS_Store
-Tasks/task1/.DS_Store
+task0/.DS_Store
+task1/.DS_Store
+task2/.DS_Store
+task3/.DS_Store
