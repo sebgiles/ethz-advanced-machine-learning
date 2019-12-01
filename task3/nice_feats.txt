@@ -1,0 +1,20 @@
+# high importance and low variance after training 
+dhr_kurtosis
+max_interv
+q95_interv
+hr_kurtosis
+QZ_skew
+tempt_kurtosis
+hr_median
+max_interv
+med_interv
+
+# nice in box plots
+hr_std_dev
+QZSZ_q05
+noise_rms
+QZ_q05
+QZ_iqr
+QZ_var
+dhr_abs_dev
+dhr_std_dev
