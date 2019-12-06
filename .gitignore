@@ -1,4 +1,4 @@
-
+*.pyc
 *.ipynb_checkpoints
 task3/X_test.csv
 task3/X_train.csv
@@ -6,4 +6,9 @@ task3/dump/
 task3/task3-matlab/
 *.DS_Store
 
-*.pyc
+task4/test_eeg2.csv
+task4/test_eeg1.csv
+task4/test_emg.csv
+task4/train_eeg1.csv
+task4/train_eeg2.csv
+task4/train_emg.csv
