@@ -6,3 +6,9 @@ task3/dump/
 task3/task3-matlab/
 *.DS_Store
 
+task4/test_eeg2.csv
+task4/test_eeg1.csv
+task4/test_emg.csv
+task4/train_eeg1.csv
+task4/train_eeg2.csv
+task4/train_emg.csv
