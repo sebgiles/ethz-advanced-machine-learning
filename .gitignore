@@ -6,3 +6,4 @@ task3/dump/
 task3/task3-matlab/
 *.DS_Store
 
+*.pyc
