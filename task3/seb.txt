@@ -1,0 +1,18 @@
+Two independent strategies. The two solutions were ensembled with equally weighted voting. The 2nd approach was generally more accurate, ensembling generally improved the confusion matrix, especially class 3 recall.
+
+1: Features loosely inferred by eye.
+Biosspy to filter and split the signals into heartbeat windows.
+New signals were constructed by computing statistics on each window and extracting QRS, zeros, extrema and relative time differences.
+More signals included the heart rate, the rpeaks timestamps, the difference between raw and filtered and some derivatives.
+(count, min, max, median, mean, variance, skew, kurtosis, several quantiles normalised by the median) were computed on each signal to be used as features. The resulting 200+ scalars were reduced to 80 by recursive correlation pruning.
+GridSearchCV selected RandomForest with 4000 trees, max depth of 70.
+
+2: CNNs on time domain data.
+Samples trimmed or repeated to be 10k timesteps long.
+Enseble of 9 CNNs of 2 different types.
+Both types have 4 dense layers at the output (128-128-64-4) and a different number of repetitions of a convolutional structure at the input.
+The common convolutional structure is:
+1DConvolution(128 filters, Relu)-MaxPooling1D-Dropout
+3 CNNs have 5 convolutional structures the rest have 6. 3 of the latter were trained with equal class weights. Inverse relative frequency with a bias was used for the remaining.
+
+All training was done on the ETH Euler Cluster.
